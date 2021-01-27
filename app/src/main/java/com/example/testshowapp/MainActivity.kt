@@ -3,13 +3,14 @@ package com.example.testshowapp
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.MenuItem
-import android.widget.LinearLayout
+import android.view.View
+import android.widget.EditText
 import android.widget.Toast
-import androidx.appcompat.app.ActionBar
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.widget.Toolbar
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
+import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.navigation.NavigationView
@@ -21,7 +22,23 @@ class MainActivity : AppCompatActivity() {
     private lateinit var mainDrawerLayout: DrawerLayout
     private lateinit var mainNavView: NavigationView
     private var toolBar: Toolbar? = null
-    private lateinit var mainRecyclerView : RecyclerView
+    private lateinit var mainRecyclerView: RecyclerView
+    private lateinit var itemDecoration: RecyclerView.ItemDecoration
+    private lateinit var searchButton: View
+    private lateinit var searchEditText: EditText
+    var hardCodedShowList = mutableListOf(
+        TVShowStruct("Itm1", false),
+        TVShowStruct("Itm2", false),
+        TVShowStruct("Itm3", false),
+        TVShowStruct("Itm4", false),
+        TVShowStruct("Itm5", false),
+        TVShowStruct("Itm6", false),
+        TVShowStruct("Itm7", false),
+        TVShowStruct("Itm8", false),
+        TVShowStruct("Itm9", false),
+        TVShowStruct("Itm10", false)
+    )
+    //private var ShowList: MutableList<ModelsForGson> = mutableListOf()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -30,19 +47,8 @@ class MainActivity : AppCompatActivity() {
         mainNavView = findViewById<NavigationView>(R.id.mainNavView)
         toolBar = findViewById<Toolbar>(R.id.includeToolbar)
         mainRecyclerView = findViewById<RecyclerView>(R.id.mainRecyclerView)
-
-        var HardCodedShowList = mutableListOf(
-            TVShowStruct("Itm1", false),
-            TVShowStruct("Itm2", false),
-            TVShowStruct("Itm3", false),
-            TVShowStruct("Itm4", false),
-            TVShowStruct("Itm5", false),
-            TVShowStruct("Itm6", false),
-            TVShowStruct("Itm7", false),
-            TVShowStruct("Itm8", false),
-            TVShowStruct("Itm9", false),
-            TVShowStruct("Itm10", false)
-        )
+        searchButton = findViewById(R.id.search_button)
+        searchEditText = findViewById<EditText>(R.id.search_edit_text)
 
         setSupportActionBar(toolBar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
@@ -52,10 +58,11 @@ class MainActivity : AppCompatActivity() {
         mainDrawerLayout.addDrawerListener(toggle)
         toggle.syncState()
 
-        val ShowListAdapter = ShowListAdapter(HardCodedShowList)
+        val ShowListAdapter = ShowListAdapter(hardCodedShowList)
         mainRecyclerView.adapter = ShowListAdapter
         mainRecyclerView.layoutManager = LinearLayoutManager(this)
-
+        itemDecoration = DividerItemDecoration(this, DividerItemDecoration.VERTICAL)
+        mainRecyclerView.addItemDecoration(itemDecoration)
 
         mainNavView.setNavigationItemSelectedListener {
             when (it.itemId) {
@@ -71,6 +78,11 @@ class MainActivity : AppCompatActivity() {
                 ).show()
             }
             true
+        }
+
+        searchButton.setOnClickListener {
+            var userQuery = searchEditText.text.toString()
+            fetchJson(userQuery)
         }
 
     }
@@ -93,6 +105,10 @@ class MainActivity : AppCompatActivity() {
         return super.onOptionsItemSelected(item)
     }
 
+    fun fetchJson(userQueryWord: String) {
+        println("Fetch Json called")
+        var requestToApi = "http://api.tvmaze.com/search/shows?q=$userQueryWord"
+        println(requestToApi)
 
-
+    }
 }

@@ -17,12 +17,37 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
+        <EditText
+            android:id="@+id/search_edit_text"
+            android:layout_width="360dp"
+            android:layout_height="0dp"
+            android:layout_marginTop="3dp"
+            android:hint="@string/searchHint"
+            android:layout_marginLeft="10dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/includeToolbar"
+            app:layout_scrollFlags="scroll|enterAlways"/>
+
+        <Button
+            android:id="@+id/search_button"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp"
+            android:background="@android:drawable/ic_search_category_default"
+            app:layout_constraintBottom_toTopOf="@+id/mainRecyclerView"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/search_edit_text"
+            app:layout_constraintTop_toBottomOf="@+id/includeToolbar"
+            app:rippleColor="@color/gray" />
+
+
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/mainRecyclerView"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/includeToolbar" />
+            app:layout_constraintTop_toBottomOf="@+id/search_edit_text" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
