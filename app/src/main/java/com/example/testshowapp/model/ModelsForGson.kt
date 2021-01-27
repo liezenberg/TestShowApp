@@ -2,7 +2,7 @@ package com.example.testshowapp.model
 
 
 import com.google.gson.annotations.SerializedName
-
+    //This class will be as a template for the data that we are going to parse
 data class ModelsForGson(
     @SerializedName("genres")
     val genres: List<String>,
