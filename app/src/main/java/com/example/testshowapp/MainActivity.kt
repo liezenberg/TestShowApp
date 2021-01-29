@@ -55,11 +55,9 @@ class MainActivity : AppCompatActivity() {
         mainRecyclerView.layoutManager = LinearLayoutManager(this)
         itemDecoration = DividerItemDecoration(this, DividerItemDecoration.VERTICAL)
         mainRecyclerView.addItemDecoration(itemDecoration)
-
+        //Create retrofitService
         mRetrofitService = Common.retrofitService
-
-
-        //Search TVShow
+        //Set listener to Search TVShow
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
                 if (query != null) {
@@ -70,31 +68,14 @@ class MainActivity : AppCompatActivity() {
             }
 
             override fun onQueryTextChange(newText: String?): Boolean {
+                ShowListAdapter.filter.filter(newText)
                 return false
-
             }
 
         })
 
     }
 
-    override fun onBackPressed() {
-
-        if (mainDrawerLayout.isDrawerOpen(GravityCompat.START)) {
-            mainDrawerLayout.closeDrawer(GravityCompat.START)
-        } else {
-            super.onBackPressed()
-        }
-
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-
-        if (toggle.onOptionsItemSelected(item)) {
-            return true
-        }
-        return super.onOptionsItemSelected(item)
-    }
     //Fetch Json from API and set up it into View
     fun fetchJson(userQueryWord: String): Boolean {
 
@@ -112,9 +93,7 @@ class MainActivity : AppCompatActivity() {
                 call: Call<List<ShowPojo>>,
                 response: Response<List<ShowPojo>>
             ) {
-
                 //Checking response
-
                 if (response.code() != 200) {
                     Toast.makeText(applicationContext, "Check the connection!", Toast.LENGTH_SHORT)
                         .show()
@@ -138,4 +117,24 @@ class MainActivity : AppCompatActivity() {
 
         return isRequestSuccessful
     }
+
+    override fun onBackPressed() {
+
+        if (mainDrawerLayout.isDrawerOpen(GravityCompat.START)) {
+            mainDrawerLayout.closeDrawer(GravityCompat.START)
+        } else {
+            super.onBackPressed()
+        }
+
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+
+        if (toggle.onOptionsItemSelected(item)) {
+            return true
+        }
+        return super.onOptionsItemSelected(item)
+    }
+
+
 }
