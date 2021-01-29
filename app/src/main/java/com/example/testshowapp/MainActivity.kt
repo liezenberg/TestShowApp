@@ -95,7 +95,7 @@ class MainActivity : AppCompatActivity() {
         }
         return super.onOptionsItemSelected(item)
     }
-
+    //Fetch Json from API and set up it into View
     fun fetchJson(userQueryWord: String): Boolean {
 
         var isRequestSuccessful = true

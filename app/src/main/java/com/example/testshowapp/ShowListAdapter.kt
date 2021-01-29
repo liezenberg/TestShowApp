@@ -34,15 +34,17 @@ class ShowListAdapter(private val context: Context, var showList: List<ShowPojo>
     override fun onBindViewHolder(holder: TVShowHolder, position: Int) {
 
         holder.itemView.apply {
-                tvShowName.text = showList[position].show.name
-                itemCheckBox.isChecked = showList[position].show.isFavorite
-                rating.text = (RATING + showList[position].show.rating?.average?.toInt())
-                tvShowDescription.text = GENRES + showList[position].show.genres?.joinToString()
-                Glide.with(context)
-                    .load(showList[position].show.image?.original?.replace("http", "https"))
-                    .fitCenter().diskCacheStrategy(
-                        DiskCacheStrategy.RESOURCE
-                    ).into(TvShowImageView)
+            tvShowName.text = showList[position].show.name
+            itemCheckBox.isChecked = showList[position].show.isFavorite
+            if (showList[position].show.rating?.average != null) {
+                rating.text = (RATING + showList[position].show.rating!!.average!!.toInt())
+            }
+            tvShowDescription.text = GENRES + showList[position].show.genres?.joinToString()
+            Glide.with(context)
+                .load(showList[position].show.image?.original?.replace("http", "https"))
+                .fitCenter().diskCacheStrategy(
+                    DiskCacheStrategy.RESOURCE
+                ).into(TvShowImageView)
 
         }
     }
