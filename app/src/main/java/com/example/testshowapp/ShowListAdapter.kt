@@ -44,7 +44,9 @@ class ShowListAdapter(
         holder.itemView.apply {
             tvShowName.text = showList[position].show.name
             itemCheckBox.isChecked = showList[position].show.isFavorite
-            rating.text = (RATING + showList[position].show.rating?.average?.toInt())
+            if (showList[position].show.rating?.average != null) {
+                rating.text = (RATING + showList[position].show.rating?.average?.toInt())
+            }
             tvShowDescription.text = GENRES + showList[position].show.genres?.joinToString()
             Glide.with(context)
                 .load(showList[position].show.image?.original?.replace("http", "https"))

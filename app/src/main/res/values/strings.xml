@@ -6,4 +6,6 @@
     <string name="close">close</string>
     <string name="searchHint">Search...</string>
     <string name="rating_0">Rating: 0</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
