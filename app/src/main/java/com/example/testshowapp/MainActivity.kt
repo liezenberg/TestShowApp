@@ -2,33 +2,17 @@ package com.example.testshowapp
 
 import android.os.Bundle
 import android.view.MenuItem
-import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.SearchView
 import androidx.appcompat.widget.Toolbar
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentManager
-import androidx.recyclerview.widget.DividerItemDecoration
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import com.example.testshowapp.common.Common
-import com.example.testshowapp.model.ShowPojo
-import com.example.testshowapp.retrofit.RetrofitServices
 import com.google.android.material.navigation.NavigationView
-import kotlinx.android.synthetic.main.fragment_favorite.*
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
-import java.lang.Exception
-import java.util.Locale.filter
 
 
 class MainActivity : AppCompatActivity() {
     private var mainFragment = MainFragment()
-    private var favoriteFragment = FavoriteFragment()
     private lateinit var toggle: ActionBarDrawerToggle
     private lateinit var mainDrawerLayout: DrawerLayout
     private lateinit var mainNavView: NavigationView
@@ -87,7 +71,7 @@ class MainActivity : AppCompatActivity() {
         lateinit var fragment: Fragment
         fragment = when (menuItem.itemId) {
             R.id.mainItem -> mainFragment
-            R.id.favoritesItem -> favoriteFragment
+            R.id.favoritesItem -> FavoriteFragment()
             else -> mainFragment
         }
         supportFragmentManager.beginTransaction().replace(R.id.flFragment, fragment).commit()

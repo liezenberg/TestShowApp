@@ -10,68 +10,58 @@ import android.widget.Filterable
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
+import com.example.testshowapp.common.GENRES
+import com.example.testshowapp.common.RATING
 import com.example.testshowapp.models.Show
 import com.example.testshowapp.roomDB.RoomDB
 import kotlinx.android.synthetic.main.item_show.view.*
 
-
-const val RATING = "Rating: "
-const val GENRES = "Genres: "
-
-class ShowListAdapter(
+class FavoriteShowAdapter(
     private val context: Context,
     var showList: MutableList<Show>
 ) :
-    RecyclerView.Adapter<ShowListAdapter.TVShowHolder>(), Filterable {
-    inner class TVShowHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
+    RecyclerView.Adapter<FavoriteShowAdapter.FavoriteTVShowHolder>(), Filterable {
+    inner class FavoriteTVShowHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
 
-    private var database: RoomDB = RoomDB.getDatabaseInstance(context)
-
+    private lateinit var database: RoomDB
     var searchItemsList: MutableList<Show> = showList.toMutableList()
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TVShowHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FavoriteTVShowHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.item_show, parent, false)
-        return TVShowHolder(view)
+        database = RoomDB.getDatabaseInstance(context)
+        return FavoriteTVShowHolder(view)
     }
 
     override fun getItemCount(): Int {
         return showList.size
     }
 
-    //Binds a data from saved structure to
-
     @SuppressLint("SetTextI18n")
-    override fun onBindViewHolder(holder: TVShowHolder, position: Int) {
+    override fun onBindViewHolder(holder: FavoriteShowAdapter.FavoriteTVShowHolder, position: Int) {
 
         holder.itemView.apply {
             tvShowName.text = showList[position].name
             itemCheckBox.isChecked = showList[position].isFavorite
-
-            rating.text = (RATING + showList[position].rating?.average?.toInt())
-
+            if (showList[position].rating?.average != null) {
+                rating.text = (RATING + showList[position].rating?.average?.toInt())
+            }
             tvShowDescription.text = GENRES + showList[position].genres?.joinToString()
             Glide.with(context)
                 .load(showList[position].image?.original?.replace("http", "https"))
                 .fitCenter().diskCacheStrategy(
                     DiskCacheStrategy.RESOURCE
                 ).into(TvShowImageView)
-
-            holder.itemView.itemCheckBox.setOnClickListener {
-                if (holder.itemView.itemCheckBox.isChecked) {
-                    database.FavoritesDao()
-                        .update(showList[position].ID, holder.itemView.itemCheckBox.isChecked)
-                    showList.clear()
-                    showList.addAll(database.FavoritesDao().getAll() as MutableList<Show>)
-                    notifyDataSetChanged()
-                } else {
-                    database.FavoritesDao()
-                        .update(showList[position].ID, holder.itemView.itemCheckBox.isChecked)
-                    showList.clear()
-                    showList.addAll(database.FavoritesDao().getAll() as MutableList<Show>)
-                }
-            }
-
         }
+        holder.itemView.itemCheckBox.setOnClickListener {
+            if (!holder.itemView.itemCheckBox.isChecked) {
+                database.FavoritesDao()
+                    .update(showList[position].ID, holder.itemView.itemCheckBox.isChecked)
+                showList.removeAt(holder.position)
+                notifyItemRemoved(holder.position)
+                notifyItemRangeChanged(holder.position, showList.size)
+            }
+        }
+
     }
 
     override fun getFilter(): Filter {
@@ -79,8 +69,9 @@ class ShowListAdapter(
     }
 
     private var adapterFilter = object : Filter() {
+
         override fun performFiltering(constraint: CharSequence?): FilterResults {
-            searchItemsList = database.FavoritesDao().getAll() as MutableList<Show>
+            searchItemsList = database.FavoritesDao().getFavorites() as MutableList<Show>
             var filteredViews: MutableList<Show> = mutableListOf()
             if (constraint == null || constraint.isEmpty()) {
                 filteredViews = searchItemsList.toMutableList()
