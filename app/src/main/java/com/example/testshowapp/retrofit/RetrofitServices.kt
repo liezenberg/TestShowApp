@@ -8,5 +8,4 @@ import retrofit2.http.Query
 interface RetrofitServices {
     @GET("search/shows")
     fun getData(@Query("q") query: String): Call<List<ShowPojo>>
-
 }

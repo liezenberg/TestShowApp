@@ -18,16 +18,18 @@ import com.example.testshowapp.roomDB.RoomDB
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.util.Locale.filter
 
 class MainFragment : Fragment() {
     private lateinit var mainRecyclerView: RecyclerView
     private lateinit var itemDecoration: RecyclerView.ItemDecoration
-    private lateinit var ShowListAdapter: ShowListAdapter
+    private lateinit var showListAdapter: ShowListAdapter
     private lateinit var searchView: SearchView
     private lateinit var mRetrofitService: RetrofitServices
-    private var ShowList: MutableList<ShowPojo> = mutableListOf()
-    private lateinit var  database: RoomDB
-    private var ShowListToAdapter: MutableList<Show> = mutableListOf()
+    private var showList: MutableList<ShowPojo> = mutableListOf()
+    private lateinit var database: RoomDB
+    private var showListToAdapter: MutableList<Show> = mutableListOf()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         database = RoomDB.getDatabaseInstance(context!!.applicationContext)
@@ -37,14 +39,13 @@ class MainFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
         val view: View = inflater.inflate(R.layout.fragment_main, container, false)
         //Find all required views
         mainRecyclerView = view.findViewById<RecyclerView>(R.id.mainRecyclerView)
         searchView = view.findViewById(R.id.search_view)
         //Set up View to RecyclerView
-        ShowListAdapter = ShowListAdapter(context!!,ShowListToAdapter)
-        mainRecyclerView.adapter = ShowListAdapter
+        showListAdapter = ShowListAdapter(context!!, showListToAdapter)
+        mainRecyclerView.adapter = showListAdapter
         mainRecyclerView.layoutManager = LinearLayoutManager(activity)
         itemDecoration = DividerItemDecoration(activity, DividerItemDecoration.VERTICAL)
         mainRecyclerView.addItemDecoration(itemDecoration)
@@ -62,7 +63,7 @@ class MainFragment : Fragment() {
             }
 
             override fun onQueryTextChange(newText: String?): Boolean {
-                ShowListAdapter.filter.filter(newText)
+                showListAdapter.filter.filter(newText)
                 return false
             }
         })
@@ -71,9 +72,9 @@ class MainFragment : Fragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-
     }
 
+    //Send a request to the API by retrofit instance
     fun fetchJson(userQueryWord: String) {
         mRetrofitService.getData(userQueryWord).enqueue(object : Callback<List<ShowPojo>> {
             override fun onFailure(call: Call<List<ShowPojo>>, t: Throwable) {
@@ -94,17 +95,23 @@ class MainFragment : Fragment() {
                     Toast.makeText(activity, "No Results!", Toast.LENGTH_SHORT)
                         .show()
                 } else {
-                    database.clearAllTables()
-                    ShowList.clear()
-                    ShowList = response.body()!!.toMutableList()
-                    for (it in ShowList){
-                        database.FavoritesDao().insert(it.show)
-                    }
-                    ShowListToAdapter = database.FavoritesDao().getAll() as MutableList<Show>
-                    ShowListAdapter = ShowListAdapter(context!!,ShowListToAdapter)
-                    mainRecyclerView.adapter = ShowListAdapter
+                    onResponseCallback(response)
                 }
             }
         })
+    }
+
+    //Processing response from API and pass it to recycler view adapter
+    fun onResponseCallback(response: Response<List<ShowPojo>>) {
+        database.clearAllTables()
+        showList.clear()
+        showList = response.body()!!.toMutableList()
+        for (it in showList) {
+            database.FavoritesDao().insert(it.show)
+        }
+        showListToAdapter = database.FavoritesDao().getAll() as MutableList<Show>
+        showListAdapter = ShowListAdapter(context!!, showListToAdapter)
+        mainRecyclerView.adapter = showListAdapter
+
     }
 }

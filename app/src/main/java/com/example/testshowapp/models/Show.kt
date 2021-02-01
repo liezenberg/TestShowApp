@@ -8,6 +8,7 @@ import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
 import java.io.Serializable
 
+//Entity for room database
 @Entity(tableName = "FavoritesEntity")
 data class Show(
     @ColumnInfo(name = "genres")
@@ -28,5 +29,5 @@ data class Show(
     val rating: Rating?,
     @Expose
     @ColumnInfo(name = "isFavorite")
-    val isFavorite:Boolean
-): Serializable
+    val isFavorite: Boolean
+) : Serializable

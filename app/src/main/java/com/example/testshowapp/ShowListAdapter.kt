@@ -23,10 +23,12 @@ class ShowListAdapter(
     var showList: MutableList<Show>
 ) :
     RecyclerView.Adapter<ShowListAdapter.TVShowHolder>(), Filterable {
+
     inner class TVShowHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
 
     private var database: RoomDB = RoomDB.getDatabaseInstance(context)
 
+    //List of Show objects to perform filtering
     var searchItemsList: MutableList<Show> = showList.toMutableList()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TVShowHolder {
@@ -38,26 +40,24 @@ class ShowListAdapter(
         return showList.size
     }
 
-    //Binds a data from saved structure to
-
     @SuppressLint("SetTextI18n")
     override fun onBindViewHolder(holder: TVShowHolder, position: Int) {
-
         holder.itemView.apply {
             tvShowName.text = showList[position].name
             itemCheckBox.isChecked = showList[position].isFavorite
-            if(showList[position].rating != null) {
+            if (showList[position].rating != null) {
                 rating.text = (RATING + showList[position].rating?.average?.toInt())
             }
-            if(showList[position].genres != null){
-                tvShowDescription.text = showList[position].genres?.joinToString(", ",GENRES)
+            if (showList[position].genres != null) {
+                tvShowDescription.text = showList[position].genres?.joinToString(", ", GENRES)
             }
+            //Insert image into view holder
             Glide.with(context)
                 .load(showList[position].image?.original?.replace("http", "https"))
                 .fitCenter().diskCacheStrategy(
                     DiskCacheStrategy.RESOURCE
                 ).into(TvShowImageView)
-
+            //Set callback to checkbox
             holder.itemView.itemCheckBox.setOnClickListener {
                 if (holder.itemView.itemCheckBox.isChecked) {
                     database.FavoritesDao()
@@ -74,15 +74,15 @@ class ShowListAdapter(
                     showList.addAll(database.FavoritesDao().getAll() as MutableList<Show>)
                 }
             }
-
         }
     }
 
     override fun getFilter(): Filter {
-        return adapterFilter
+        return adapterFilter()
     }
 
-    private var adapterFilter = object : Filter() {
+    //Filter to perform filtering displayed recyclerview
+    private inner class adapterFilter : Filter() {
         override fun performFiltering(constraint: CharSequence?): FilterResults {
             searchItemsList = database.FavoritesDao().getAll() as MutableList<Show>
             var filteredViews: MutableList<Show> = mutableListOf()
@@ -108,7 +108,6 @@ class ShowListAdapter(
             showList.addAll(results?.values as MutableList<Show>)
             notifyDataSetChanged()
         }
-
     }
 
 }

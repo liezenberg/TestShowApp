@@ -21,9 +21,12 @@ class FavoriteShowAdapter(
     var showList: MutableList<Show>
 ) :
     RecyclerView.Adapter<FavoriteShowAdapter.FavoriteTVShowHolder>(), Filterable {
+
     inner class FavoriteTVShowHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
 
     private lateinit var database: RoomDB
+
+    //List of Show objects to perform filtering
     var searchItemsList: MutableList<Show> = showList.toMutableList()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FavoriteTVShowHolder {
@@ -46,6 +49,7 @@ class FavoriteShowAdapter(
                 rating.text = (RATING + showList[position].rating?.average?.toInt())
             }
             tvShowDescription.text = GENRES + showList[position].genres?.joinToString()
+            //Insert image into view holder
             Glide.with(context)
                 .load(showList[position].image?.original?.replace("http", "https"))
                 .fitCenter().diskCacheStrategy(
@@ -53,6 +57,7 @@ class FavoriteShowAdapter(
                 ).into(TvShowImageView)
         }
         holder.itemView.itemCheckBox.setOnClickListener {
+            //Set callback to checkbox
             if (!holder.itemView.itemCheckBox.isChecked) {
                 database.FavoritesDao()
                     .update(showList[position].ID, holder.itemView.itemCheckBox.isChecked)
@@ -65,10 +70,10 @@ class FavoriteShowAdapter(
     }
 
     override fun getFilter(): Filter {
-        return adapterFilter
+        return AdapterFilter()
     }
 
-    private var adapterFilter = object : Filter() {
+    inner class AdapterFilter : Filter() {
 
         override fun performFiltering(constraint: CharSequence?): FilterResults {
             searchItemsList = database.FavoritesDao().getFavorites() as MutableList<Show>

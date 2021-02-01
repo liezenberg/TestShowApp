@@ -9,8 +9,8 @@ const val RATING = "Rating: "
 const val GENRES = "Genres: "
 
 object Common {
-    private val DATABASE_NAME: String = "TvShowsAppDatabase"
-    const val BASE_URL = "https://api.tvmaze.com"
+    private const val BASE_URL = "https://api.tvmaze.com"
+    //Get retrofit implementation to send requests
     val retrofitService: RetrofitServices
         get() = RetrofitClient.getClient(BASE_URL).create(RetrofitServices::class.java)
 }

@@ -14,7 +14,7 @@
         android:background="@drawable/rounded_image_item"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"/>
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/tvShowName"
@@ -25,8 +25,7 @@
         android:textSize="15sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="@+id/tvShowDescription"
-        app:layout_constraintTop_toTopOf="parent"
-        />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/tvShowDescription"
@@ -46,9 +45,9 @@
         android:layout_width="20dp"
         android:layout_height="20dp"
         android:layout_marginBottom="10dp"
-        android:buttonTint="@color/gray"
-        android:button="@drawable/rounded_image_item"
         android:background="@drawable/custom_checkbox"
+        android:button="@drawable/rounded_image_item"
+        android:buttonTint="@color/gray"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="@+id/rating"

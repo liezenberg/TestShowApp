@@ -21,10 +21,12 @@ class FavoriteFragment : Fragment() {
     private lateinit var favoriteShowListAdapter: FavoriteShowAdapter
     private lateinit var favoriteSearchView: SearchView
     private var favoriteList: MutableList<Show> = mutableListOf()
-    private lateinit var  database: RoomDB
+    private lateinit var database: RoomDB
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         database = RoomDB.getDatabaseInstance(context!!)
+        //Get only favorites shows from a database
         favoriteList = database.FavoritesDao().getFavorites() as MutableList<Show>
     }
 
@@ -36,7 +38,7 @@ class FavoriteFragment : Fragment() {
         //Find all required views
         favoriteRecyclerView = view.findViewById<RecyclerView>(R.id.favoriteRecyclerView)
         favoriteSearchView = view.findViewById(R.id.favorite_search_view)
-        //Set up View to RecyclerView
+        //Set View to RecyclerView
         favoriteShowListAdapter = FavoriteShowAdapter(context!!, favoriteList)
         favoriteRecyclerView.adapter = favoriteShowListAdapter
         favoriteRecyclerView.layoutManager = LinearLayoutManager(activity)
@@ -45,7 +47,7 @@ class FavoriteFragment : Fragment() {
         //Set listener to Search TVShow
         favoriteSearchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
-               return true
+                return true
             }
 
             override fun onQueryTextChange(newText: String?): Boolean {

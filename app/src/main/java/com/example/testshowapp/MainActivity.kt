@@ -18,6 +18,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var mainDrawerLayout: DrawerLayout
     private lateinit var mainNavView: NavigationView
     private var toolBar: Toolbar? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -25,7 +26,7 @@ class MainActivity : AppCompatActivity() {
         mainDrawerLayout = findViewById<DrawerLayout>(R.id.mainDrawerLayout)
         mainNavView = findViewById<NavigationView>(R.id.mainNavView)
         toolBar = findViewById<Toolbar>(R.id.includeToolbar)
-        //Set up ActionBar
+        //Set ActionBar
         setSupportActionBar(toolBar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.title = "Main"
@@ -33,9 +34,9 @@ class MainActivity : AppCompatActivity() {
         toggle = ActionBarDrawerToggle(this, mainDrawerLayout, R.string.open, R.string.close)
         mainDrawerLayout.addDrawerListener(toggle)
         toggle.syncState()
-        //Set up navigation ability to mainNavViewTa
-        //TODO: Clear clear all Tables
+        //Set NavigationDrawer with callback on items
         setupDrawerContent(mainNavView)
+        //Replace MainFragment to FragmentManager
         supportFragmentManager.beginTransaction().apply {
             replace(R.id.flFragment, mainFragment)
             commit()
@@ -68,6 +69,7 @@ class MainActivity : AppCompatActivity() {
         })
     }
 
+    //set fragment depending on clicked item
     fun selectDrawerItem(menuItem: MenuItem) {
         lateinit var fragment: Fragment
         fragment = when (menuItem.itemId) {
