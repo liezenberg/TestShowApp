@@ -66,7 +66,6 @@ class ShowListAdapter(
                     searchItemsList.clear()
                     showList.addAll(database.FavoritesDao().getAll() as MutableList<Show>)
                     searchItemsList.addAll(database.FavoritesDao().getAll())
-                    //notifyDataSetChanged()
                 } else {
                     database.FavoritesDao()
                         .update(showList[position].ID, holder.itemView.itemCheckBox.isChecked)

@@ -14,7 +14,7 @@ abstract class RoomDB : RoomDatabase() {
     abstract fun FavoritesDao(): FavoritesDao
 
     companion object {
-        private val DATABASE_NAME: String = "TvShowsAppDatabase"
+        private const val DATABASE_NAME: String = "TvShowsAppDatabase"
 
         @Volatile
         private var database: RoomDB? = null

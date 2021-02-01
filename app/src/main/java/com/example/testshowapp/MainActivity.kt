@@ -22,7 +22,7 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        //Find all required views
+        //Init all required views
         mainDrawerLayout = findViewById<DrawerLayout>(R.id.mainDrawerLayout)
         mainNavView = findViewById<NavigationView>(R.id.mainNavView)
         toolBar = findViewById<Toolbar>(R.id.includeToolbar)
@@ -36,7 +36,7 @@ class MainActivity : AppCompatActivity() {
         toggle.syncState()
         //Set NavigationDrawer with callback on items
         setupDrawerContent(mainNavView)
-        //Replace MainFragment to FragmentManager
+        //Set MainFragment as first page
         supportFragmentManager.beginTransaction().apply {
             replace(R.id.flFragment, mainFragment)
             commit()
