@@ -8,6 +8,7 @@ import androidx.appcompat.widget.Toolbar
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
+import com.example.testshowapp.roomDB.RoomDB
 import com.google.android.material.navigation.NavigationView
 
 
@@ -17,7 +18,6 @@ class MainActivity : AppCompatActivity() {
     private lateinit var mainDrawerLayout: DrawerLayout
     private lateinit var mainNavView: NavigationView
     private var toolBar: Toolbar? = null
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -33,7 +33,8 @@ class MainActivity : AppCompatActivity() {
         toggle = ActionBarDrawerToggle(this, mainDrawerLayout, R.string.open, R.string.close)
         mainDrawerLayout.addDrawerListener(toggle)
         toggle.syncState()
-        //Set up navigation ability to mainNavView
+        //Set up navigation ability to mainNavViewTa
+        //TODO: Clear clear all Tables
         setupDrawerContent(mainNavView)
         supportFragmentManager.beginTransaction().apply {
             replace(R.id.flFragment, mainFragment)

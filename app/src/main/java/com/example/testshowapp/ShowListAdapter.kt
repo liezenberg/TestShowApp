@@ -46,10 +46,12 @@ class ShowListAdapter(
         holder.itemView.apply {
             tvShowName.text = showList[position].name
             itemCheckBox.isChecked = showList[position].isFavorite
-
-            rating.text = (RATING + showList[position].rating?.average?.toInt())
-
-            tvShowDescription.text = GENRES + showList[position].genres?.joinToString()
+            if(showList[position].rating != null) {
+                rating.text = (RATING + showList[position].rating?.average?.toInt())
+            }
+            if(showList[position].genres != null){
+                tvShowDescription.text = showList[position].genres?.joinToString(", ",GENRES)
+            }
             Glide.with(context)
                 .load(showList[position].image?.original?.replace("http", "https"))
                 .fitCenter().diskCacheStrategy(
@@ -61,8 +63,10 @@ class ShowListAdapter(
                     database.FavoritesDao()
                         .update(showList[position].ID, holder.itemView.itemCheckBox.isChecked)
                     showList.clear()
+                    searchItemsList.clear()
                     showList.addAll(database.FavoritesDao().getAll() as MutableList<Show>)
-                    notifyDataSetChanged()
+                    searchItemsList.addAll(database.FavoritesDao().getAll())
+                    //notifyDataSetChanged()
                 } else {
                     database.FavoritesDao()
                         .update(showList[position].ID, holder.itemView.itemCheckBox.isChecked)
